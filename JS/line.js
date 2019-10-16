@@ -13,6 +13,9 @@ class Line extends Figure {
 
         this.refPoints.push(new LinePoint(this));
         this.refPoints.push(new LinePoint(this));
+        
+
+        this.eq = new LineEquasion(this.refPoints[0], this.refPoints[1]);
     }
 
     static create(svgFigure) {
@@ -256,6 +259,8 @@ class Line extends Figure {
         update(0, x1, y1);
         update(1, x2, y2);
         this.center.setCoords(this.c);
+
+        this.eq.updateEquasionByPoints(this.refPoints[0], this.refPoints[1]);
     }
 
     showRefPoints() {
