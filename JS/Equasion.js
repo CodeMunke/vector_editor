@@ -32,8 +32,11 @@ class LineEquasion {
         this.mat = [[1  , 1  , 1],
                     [p.x, p.y, 1],
                     [q.x, q.y, 1]];
+        /** Флаг деления на ноль */
         var divByZeroOccured = false;
+        /** Значения A, B, C для вывода в общую форму */
         var a = 0, b = 0, c = 0;
+        /** Поле с общей формой */
         var eq_str = this.toString();
     }
 
@@ -53,6 +56,7 @@ class LineEquasion {
 
     normalize () {
         if (this.C == 0) {
+            /** Нормализация не удалась, выводим в ненормализованном виде */
             this.divByZeroOccured = true;
             this.a = this.A;
             this.b = this.B;

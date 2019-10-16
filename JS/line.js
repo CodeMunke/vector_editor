@@ -14,7 +14,6 @@ class Line extends Figure {
         this.refPoints.push(new LinePoint(this));
         this.refPoints.push(new LinePoint(this));
         
-
         this.eq = new LineEquasion(this.refPoints[0], this.refPoints[1]);
     }
 
