@@ -51,7 +51,7 @@ class Line extends Figure {
             obj.moveByAngeles(click, current);
             const dx = current.x - click.x;
             const dy = current.y - click.y;
-            options[1].value = Math.sqrt(dx*dx + dy*dy);
+            options[1].value = obj.eq.eq_str;
         };
 
         const stopMoving = () => {
@@ -180,7 +180,7 @@ class Line extends Figure {
                 ind = newInd;
                 this.refPoints[ind].circle.setAttribute('fill', '#0000FF');
             }
-            options[1].value = this.length;
+            options[1].value = this.eq.toString();
         }).bind(this);
 
         const stopMoving = (event) => {
@@ -306,7 +306,7 @@ class Line extends Figure {
         optionsLine.classList.add('show-option');
         const options = optionsLine.getElementsByTagName('input');
         options[0].value = this.svgFig.getAttribute('stroke-width');
-        options[1].value = this.length;
+        options[1].value = this.eq.toString();
     }
 
     set x1(v) { this.svgFig.setAttribute('x1', +v); }
@@ -346,15 +346,17 @@ drawPanel.addEventListener('mousedown', Line.draw = Line.draw.bind(Line));
     Figure.addPanelListener(Line, inputs, selectors, 0, () => {
         currentFigure.svgFig.setAttribute('stroke-width', +inputs[0].value);
     });
-    Figure.addPanelListener(Line, inputs, selectors, 1, () => {
-        if (+inputs[1].value <= 0) {
-            inputs[1].value = currentFigure.length;
-            return;
-        }
-        const sin = (currentFigure.y2 - currentFigure.y1) / currentFigure.length;
-        const cos = (currentFigure.x2 - currentFigure.x1) / currentFigure.length;
-        currentFigure.x2 = currentFigure.x1 + (+inputs[1].value * cos);
-        currentFigure.y2 = currentFigure.y1 + (+inputs[1].value * sin);
+    Figure.addPanelListener(Line, inputs, null, 1, () => {
+        // currentFigure.eq.normalize();
+        // inputs[1].value = currentFigure.eq.toSrting();
+        // if (+inputs[1].value <= 0) {
+        //     inputs[1].value = currentFigure.length;
+        //     return;
+        // }
+        // const sin = (currentFigure.y2 - currentFigure.y1) / currentFigure.length;
+        // const cos = (currentFigure.x2 - currentFigure.x1) / currentFigure.length;
+        // currentFigure.x2 = currentFigure.x1 + (+inputs[1].value * cos);
+        // currentFigure.y2 = currentFigure.y1 + (+inputs[1].value * sin);
         currentFigure.updateRefPointsCoords();
     });
 

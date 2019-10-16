@@ -170,13 +170,21 @@
       border-radius: 10px;
       justify-content: flex-end;
   }
-  .selector-label {
+  .equasion {
+    margin: auto 0px auto 10px;
+    display: flex;
+    height: 25px;
+    background-color: #05b5b5;
+    border-radius: 10px;
+    justify-content: flex-end;
+  }
+  .selector-label, .equasion-label {
       margin: auto 0 auto 10px;
       color: #fff;
       font-family: 'Roboto', sans-serif;
       font-size: 10pt;
   }
-  .selector-field {
+  .selector-field, .equasion-field {
       margin: auto 0 auto 5px;
       height: 25px;
       border: none;
@@ -197,6 +205,15 @@
       cursor: pointer;
       outline: none;
       border-radius: 0 10px 10px 0;
+  }
+  .equasion-rounder {
+    margin: auto 0 auto 0;
+    height: 25px;
+    width: 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-radius: 0 10px 10px 0;
   }
   .selector-button:hover {
       background-color: #0cd8d8;

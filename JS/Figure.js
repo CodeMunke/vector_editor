@@ -112,11 +112,14 @@ class Figure {
                 }
             }
         });
-        selectors[ind].addEventListener('click', () => {
-            if (currentFigure instanceof type) {
-                update();
-            }
-        });
+        if (selectors != null)
+        {
+            selectors[ind].addEventListener('click', () => {
+                if (currentFigure instanceof type) {
+                    update();
+                }
+            });
+        }
     }
 }
 

@@ -22,7 +22,7 @@ function MultiplyMatrix(A,B)
     return C;
 }
 
-class LineEquasion {
+class LineEquasion {    
     constructor (p, q) {
         /*  Матрица прямой, заданная как векторное пр-ве 2-х точек:
             |i   j   k|
@@ -32,18 +32,9 @@ class LineEquasion {
         this.mat = [[1  , 1  , 1],
                     [p.x, p.y, 1],
                     [q.x, q.y, 1]];
-    }
-
-    get A () {
-        return mat[p_n][1] * mat[q_n][2] - mat[p_n][2] * mat[q_n][1];
-    }
-
-    get B () {
-        return mat[p_n][0] * mat[q_n][2] - mat[p_n][2] * mat[q_n][0];
-    }
-
-    get C () {
-        return mat[p_n][0] * mat[q_n][1] - mat[p_n][1] * mat[q_n][0];
+        var divByZeroOccured = false;
+        var a = 0, b = 0, c = 0;
+        var eq_str = this.toString();
     }
 
     transfer (d) {
@@ -61,12 +52,80 @@ class LineEquasion {
     }
 
     normalize () {
-        this.A = A / this.C;
-        this.B = B / this.C;
-        this.C = 1;
+        if (this.C == 0) {
+            this.divByZeroOccured = true;
+            this.a = this.A;
+            this.b = this.B;
+            this.c = this.C;
+            return;
+        }
+        this.a = this.A / this.C;
+        this.b = this.B / this.C;
+        this.c = 1;
     }
 
     toString () {
-        return this.A + "x " + this.B + "y " + this.C;
+        this.normalize();
+        let outStr, xSign, ySign, zSign;
+        if (this.divByZeroOccured == true) {
+            this.divByZeroOccured = false;
+            xSign = this.a + "x ";
+            if (this.b < 0) {
+                ySign = "- " + this.b;
+            }
+            else {
+                ySign = "+ " + this.b;
+            }
+            ySign += "y ";
+            if (this.c < 0) {
+                zSign = "- " + this.c;
+            }
+            else {
+                zSign = "+ " + this.c;
+            }
+        }
+        else {
+            xSign = this.a.toFixed(5) + "x ";
+            if (this.b < 0) {
+                ySign = "- " + Math.abs(this.b.toFixed(5));
+            }
+            else {
+                ySign = "+ " + this.b.toFixed(5);
+            }
+            ySign += "y ";
+            zSign = "+ " + this.c;
+        }
+        outStr = xSign + ySign + zSign;
+        this.eq_str = outStr;
+        return outStr;
     }
+
+
+    get A () {
+        let mat = this.mat;
+        return mat[p_n][1] * mat[q_n][2] - mat[p_n][2] * mat[q_n][1];
+    }
+
+    get B () {
+        let mat = this.mat;
+        return mat[p_n][0] * mat[q_n][2] - mat[p_n][2] * mat[q_n][0];
+    }
+
+    get C () {
+        let mat = this.mat;
+        return mat[p_n][0] * mat[q_n][1] - mat[p_n][1] * mat[q_n][0];
+    }
+    
+    set A (val) {
+        this._A = val;
+    }
+
+    set B (val) {
+        this._B = val;
+    }
+
+    set C (val) {
+        this._C = val;
+    }
+    
 }
