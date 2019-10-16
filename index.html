@@ -1,0 +1,147 @@
+<!DOCTYPE html> <!-- HTML-Документ -->
+<html lang="ru" dir="ltr"> <!-- Язык русский, читать слева направо -->
+    <head>
+        <!-- Таблица символов = UTF-8 -->
+        <meta charset="utf-8">
+        <title>Это мой первый сайт, оставьте меня в покое!</title>
+        <link rel="stylesheet" href="CSS/styles.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+            integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+            crossorigin="anonymous">
+        <!-- <script src="https://kit.fontawesome.com/0c71f82d5b.js" crossorigin="anonymous"></script> -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <p id="logo">
+                <b>Я не умею в веб</b>
+            </p>
+            <!-- Группа: кнопки верхнего бара -->
+            <div class="top-buttons">
+                <!-- Кнопка создания рабочего поля TODO: add JS -->
+                <button id="creature" class="button" onclick="createSVGPanel()">
+                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                </button>
+                <!-- Кнопка загрузки .svg изображения TODO: add JS -->
+                <button class="button" onclick="document.getElementById('file-input').click();">
+                        <input id="file-input" accept="image/svg+xml" type="file" name="name" style="display: none;" />
+                        <i class="fa fa-folder" aria-hidden="true"></i>
+                </button>
+                <!-- Кнопка сохранения рабочего поля в .svg TODO: add JS -->
+                <button id="save" class="button" onclick="saveSVG()">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                </button>
+            </div>
+            <!-- Группа: выбранный инструмент -->
+            <div id="selected-instrument-block">
+                    <b id="selected-instrument-label">Выбранный инструмент:</b>
+                    <b id="selected-instrument">Курсор</b>
+            </div>
+            <!-- TODO: add some options for the top bar -->
+            <div id="options">
+                <div id="options-line">
+                    <div class="selector">
+                            <span class="selector-label">Толщина линии, px:</span>
+                            <input style="width: 35px;" type="text" class="selector-field" />
+                            <button type="button" class="selector-button"><i style="color: white;" class="fas fa-sort-down"></i></button>
+                            <ul class="selector-ul">
+                                <li class="selector-li">1</li>
+                                <li class="selector-li">2</li>
+                                <li class="selector-li">3</li>
+                                <li class="selector-li">4</li>
+                                <li class="selector-li">5</li>
+                                <li class="selector-li">7</li>
+                                <li class="selector-li">10</li>
+                                <li class="selector-li">13</li>
+                                <li class="selector-li">15</li>
+                            </ul>
+                    </div>
+                    <div class="selector">
+                            <span class="selector-label">Длина, px:</span>
+                            <input style="width: 35px;" type="text" class="selector-field" />
+                            <button type="button" class="selector-button"><i style="color: white;" class="fas fa-sort-down"></i></button>
+                            <ul class="selector-ul">
+                                <li class="selector-li">10</li>
+                                <li class="selector-li">50</li>
+                                <li class="selector-li">100</li>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div id="left-panel">
+                <input type="radio" alt="Курсор" id="cursor" name="instruments" checked/>
+                <label for="cursor"><i class="fa fa-mouse-pointer"></i></label>
+                <input type="radio" alt="Рука" id="hand" name="instruments"/>
+                <label for="hand"><i class="fa fa-hand-paper" aria-hidden="true"></i></label>
+                <!-- <input type="radio" alt="Перо" id="pen" name="instruments"/>
+                <label for="pen"><i class="fas fa-pen-fancy" aria-hidden="true"></i></label>
+                <input type="radio" alt="Текст" id="text" name="instruments"/>
+                <label for="text"><i class="fa fa-font" aria-hidden="true"></i></label> -->
+                <input type="radio" alt="Прямая" id="line" name="instruments"/>
+                <label for="line"><i class="fa fa-minus fa-lg" aria-hidden="true" style="transform: rotate(-45deg);"></i></label>
+                <!-- <ul>
+                    <li>
+                    <button class="button">
+                        <i class="fa fa-caret-up fa-lg" aria-hidden="true" style="transform: scale(1.2, 1.2); display:block;"></i>
+                        <i class="fa fa-circle" aria-hidden="true" style="transform: scale(0.7, 0.7);"></i>
+                        <i class="fa fa-square" aria-hidden="true" style="transform: scale(0.7, 0.7);"></i>
+                    </button>
+                    <ul class="vertical-menu">
+                        <input type="radio" alt="Прямоугольник" id="rect" name="instruments">
+                        <label for="rect"><i class="fas fa-square-full" aria-hidden="true"></i>Прямоугольник</label>
+                        <input type="radio" alt="Эллипс" id="ellipse" name="instruments">
+                        <label for="ellipse"><i class="fa fa-circle" aria-hidden="true"></i>Эллипс</label>
+                        <input type="radio" alt="Многоугольник" id="polygon" name="instruments">
+                        <label for="polygon"><i class="fas fa-star" aria-hidden="true"></i>Многоугольник</label>
+                    </ul>
+                    </li>
+                </ul> -->
+                <!-- <input type="radio" alt="Кисть" id="brush" name="instruments"/>
+                <label for="brush"><i class="fa fa-paint-brush" aria-hidden="true"></i></label>
+                <input type="radio" alt="Ластик" id="eraser" name="instruments"/>
+                <label for="eraser"><i class="fa fa-eraser" aria-hidden="true"></i></label>
+                <input type="radio" alt="Пипетка" id="pipette" name="instruments"/>
+                <label for="pipette"><i class="fa fa-thermometer-empty" aria-hidden="true" style="transform: rotate(225deg);"></i></label>
+                <input type="radio" alt="Лупа" id="zoom" name="instruments"/>
+                <label for="zoom"><i class="fa fa-search" aria-hidden="true"></i></label>
+                <button id="button-color" class="button"><i id="color" class="fa fa-square" aria-hidden="true"></i></button> -->
+                <!-- <div id="color-picker" class="cp-default">
+                        <div class="picker-wrapper">
+                            <div id="picker" class="picker"></div>
+                            <div id="picker-indicator" class="picker-indicator"></div>
+                        </div>
+                        <div class="pcr-wrapper">
+                            <div id="pcr" class="pcr"></div>
+                            <div id="pcr-indicator" class="pcr-indicator"></div>
+                        </div>
+                        <ul id="color-values">
+                            <div id="pcr_bg"></div>
+                            <li><label>RGB:</label><span id="rgb"></span></li>
+                            <li><label>HSV:</label><span id="hsv"></span></li>
+                            <li><label>HEX:</label><span id="hex"></span></li>
+                        </ul>
+                </div> -->
+            </div>
+            <div id="back-panel">
+                <div id="workspace">
+                    <svg id="svg-panel" width="900" height="500"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    </svg>
+                </div>
+            </div>
+        </main>
+        <!--Добавлять скрипты под этим комментарием-->
+        <script src="JS/selector-ui.js"></script>
+        <script src="JS/Figure.js"></script>
+        <script src="JS/lib.js"></script>
+        <script src="JS/handler.js"></script>
+        <script src="JS/hand.js"></script>
+        <script src="JS/line.js"></script>
+        <script src="JS/open.js"></script>
+        <script src="JS/save.js"></script>
+        <script src="JS/creature.js"></script>
+        <script src="JS/keyActions.js"></script>
+    </body>
+</html>
