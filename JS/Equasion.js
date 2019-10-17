@@ -38,6 +38,7 @@ class LineEquasion {
         var a = 0, b = 0, c = 0;
         /** Поле с общей формой */
         var eq_str = this.toString();
+        var norm_required = false;
     }
 
     transfer (d) {
@@ -69,20 +70,27 @@ class LineEquasion {
     }
 
     toString () {
-        this.normalize();
+        if (this.norm_required) {
+            this.normalize();
+        }
+        else {
+            this.a = this.A;
+            this.b = this.B;
+            this.c = this.C;
+        }
         let outStr, xSign, ySign, zSign;
-        if (this.divByZeroOccured == true) {
+        if (this.divByZeroOccured == true || !this.norm_required) {
             this.divByZeroOccured = false;
             xSign = this.a + "x ";
             if (this.b < 0) {
-                ySign = "- " + this.b;
+                ySign = "- " + Math.abs(this.b);
             }
             else {
                 ySign = "+ " + this.b;
             }
             ySign += "y ";
             if (this.c < 0) {
-                zSign = "- " + this.c;
+                zSign = "- " + Math.abs(this.c);
             }
             else {
                 zSign = "+ " + this.c;

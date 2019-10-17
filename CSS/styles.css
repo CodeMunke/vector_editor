@@ -162,21 +162,13 @@
     margin-left: 5px;
     color: #05b5b5;
   }
-  .selector {
+  .selector, .equasion {
       margin: auto 0px auto 10px;
       display: flex;
       height: 25px;
       background-color: #05b5b5;
       border-radius: 10px;
       justify-content: flex-end;
-  }
-  .equasion {
-    margin: auto 0px auto 10px;
-    display: flex;
-    height: 25px;
-    background-color: #05b5b5;
-    border-radius: 10px;
-    justify-content: flex-end;
   }
   .selector-label, .equasion-label {
       margin: auto 0 auto 10px;
@@ -231,7 +223,7 @@
       opacity: 0;
       transition: 0.3s;
   }
-  .selector-li {
+  .selector-li, .equasion-li{
       color: #fff;
       padding: 5px 10px;
       transition: 0.3s;

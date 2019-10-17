@@ -146,6 +146,22 @@ class Line extends Figure {
         currentFigure = null;
     }
 
+    moveByMiddles(fixed, moving, horizontal) {
+        this.setAttrs(this.getAttrsByMiddles(fixed, moving, horizontal));
+    }
+
+    getAttrsByMiddles(fixed, moving, horizontal) {
+        let x, y, width, height;
+        if (horizontal) {
+            const left = (fixed.x < moving.x) ? fixed : moving;
+            [x, y, width, height] = [left.x, this.y, Math.abs(fixed.x - moving.x), this.height];
+        } else {
+            const upper = (fixed.y < moving.y) ? fixed : moving;
+            [x, y, width, height] = [this.x, upper.y, this.width, Math.abs(fixed.y - moving.y)];
+        }
+        return [x, y, width, height];
+    }
+
     takePoint(event) {
         if (!cursor.checked || this.somePointTaken || someFigureTaken) {
             return;
@@ -164,13 +180,13 @@ class Line extends Figure {
         const movePoint = ((event) => {
             const coords = getMouseCoords(event);
 
-            if (angelPushed) {
+            // if (angelPushed) {
                 this.moveByAngeles(fixed, coords);
-            } else {
-                const coord = (horizontal) ? 'y' : 'x';
-                coords[coord] = pushed[coord];
-                this.moveByMiddles(fixed, coords, horizontal);
-            }
+            // } else {
+            //     const coord = (horizontal) ? 'y' : 'x';
+            //     coords[coord] = pushed[coord];
+            //     this.moveByMiddles(fixed, coords, horizontal);
+            // }
 
             this.updateRefPointsCoords();
             newInd = this.findIndexMerged(this.getSymmetrical(fixed));
@@ -345,7 +361,7 @@ drawPanel.addEventListener('mousedown', Line.draw = Line.draw.bind(Line));
     Figure.addPanelListener(Line, inputs, selectors, 0, () => {
         currentFigure.svgFig.setAttribute('stroke-width', +inputs[0].value);
     });
-    Figure.addPanelListener(Line, inputs, null, 1, () => {
+    Figure.addPanelListener(Line, inputs, selectors, 1, () => {
         // currentFigure.eq.normalize();
         // inputs[1].value = currentFigure.eq.toSrting();
         // if (+inputs[1].value <= 0) {
