@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
             integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
             crossorigin="anonymous">
-        <!-- <script src="https://kit.fontawesome.com/0c71f82d5b.js" crossorigin="anonymous"></script> -->
+        <script src="https://kit.fontawesome.com/a5a566d4c8.js" crossorigin="anonymous"></script>
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     </head>
     <body>
@@ -45,10 +45,6 @@
                             <input style="width: 35px;" type="text" class="selector-field" />
                             <button type="button" class="selector-button"><i style="color: white;" class="fas fa-sort-down"></i></button>
                             <ul class="selector-ul">
-                                <!-- <li class="selector-li">1</li>
-                                <li class="selector-li">2</li>
-                                <li class="selector-li">3</li>
-                                <li class="selector-li">4</li> -->
                                 <li class="selector-li">5</li>
                                 <li class="selector-li">7</li>
                                 <li class="selector-li">10</li>
@@ -56,16 +52,6 @@
                                 <li class="selector-li">15</li>
                             </ul>
                     </div>
-                    <!-- <div class="selector">
-                            <span class="selector-label">Длина, px:</span>
-                            <input style="width: 35px;" type="text" class="selector-field" />
-                            <button type="button" class="selector-button"><i style="color: white;" class="fas fa-sort-down"></i></button>
-                            <ul class="selector-ul">
-                                <li class="selector-li">10</li>
-                                <li class="selector-li">50</li>
-                                <li class="selector-li">100</li>
-                            </ul>
-                    </div> -->
                     <div class="selector">
                         <span class="equasion-label">Уравнение:</span>
                         <input style="width: 160px; " type="text" class="selector-field" />
@@ -76,20 +62,33 @@
                         </ul>
                     </div>
                 </div>
+                <div id="options-grid">
+                        <button id="grid-button" class="tool-button">Показать</button>
+                        <div class="selector">
+                                <span class="selector-label">Размер клетки, px:</span>
+                                <input style="width: 35px;" type="text" class="selector-field" />
+                                <button type="button" class="selector-button"><i style="color: white;" class="fas fa-sort-down"></i></button>
+                                <ul class="selector-ul">
+                                    <li class="selector-li">5</li>
+                                    <li class="selector-li">10</li>
+                                    <li class="selector-li">15</li>
+                                    <li class="selector-li">20</li>
+                                    <li class="selector-li">25</li>
+                                </ul>
+                        </div>
+                    </div>
             </div>
         </header>
         <main>
             <div id="left-panel">
                 <input type="radio" alt="Курсор" id="cursor" name="instruments" checked/>
-                <label for="cursor"><i class="fa fa-mouse-pointer"></i></label>
+                <label for="cursor"><i class="fas fa-mouse-pointer"></i></label>
                 <input type="radio" alt="Рука" id="hand" name="instruments"/>
-                <label for="hand"><i class="fa fa-hand-paper" aria-hidden="true"></i></label>
-                <!-- <input type="radio" alt="Перо" id="pen" name="instruments"/>
-                <label for="pen"><i class="fas fa-pen-fancy" aria-hidden="true"></i></label>
-                <input type="radio" alt="Текст" id="text" name="instruments"/>
-                <label for="text"><i class="fa fa-font" aria-hidden="true"></i></label> -->
+                <label for="hand"><i class="fas fa-hand-paper" aria-hidden="true"></i></label>
                 <input type="radio" alt="Прямая" id="line" name="instruments"/>
-                <label for="line"><i class="fa fa-minus fa-lg" aria-hidden="true" style="transform: rotate(-45deg);"></i></label>
+                <label for="line"><i class="fas fa-minus fa-lg" aria-hidden="true" style="transform: rotate(-45deg);"></i></label>
+                <input type="radio" alt="Система координат" id="grid" name="instruments"/>
+                <label for="grid"><i class="fas fa-border-none" aria-hidden="true"></i></label>
                 <!-- <ul>
                     <li>
                     <button class="button">
@@ -135,6 +134,10 @@
             </div>
             <div id="back-panel">
                 <div id="workspace">
+                    <!-- <svg id="grid-panel" width="900" height="500"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" 
+                    opacity=0>
+                    </svg> -->
                     <svg id="svg-panel" width="900" height="500"
                     xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
                     </svg>
@@ -152,6 +155,7 @@
         <script src="JS/open.js"></script>
         <script src="JS/save.js"></script>
         <script src="JS/creature.js"></script>
+        <script src="JS/grid.js"></script>
         <script src="JS/keyActions.js"></script>
         <!-- <script src="JS/rectangle.js"></script> -->
     </body>

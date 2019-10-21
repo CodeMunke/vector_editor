@@ -7,7 +7,7 @@ const instruments = [];
 // const ids = ['cursor', 'hand', 'pen', 'text',
 //     'line', 'ellipse', 'rect', 'polygon',
 //     'brush', 'eraser', 'pipette', 'zoom'];
-const ids = ['cursor', 'hand', 'line'];
+const ids = ['cursor', 'hand', 'line', 'grid'];
 
 /*Текущий выбранный инструмент*/
 let currentInstrument = null;
@@ -21,6 +21,7 @@ let someFigureTaken = false;
 const drawPanel = document.getElementById('workspace');
 const leftPanel = document.getElementById('left-panel');
 let svgPanel = document.getElementById('svg-panel');
+// let gridPanel = document.getElementById('grid-panel');
 const svgNS = 'http://www.w3.org/2000/svg';
 
 /*Добавление всех инструментов в массив и присваивание обработчиков*/

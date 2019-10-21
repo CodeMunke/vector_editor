@@ -29,4 +29,6 @@ function createSVGPanel() {
 
 	svgPanel.setAttribute('width', width);
 	svgPanel.setAttribute('height', height);
+
+	svgGrid = new Grid(10);
 }

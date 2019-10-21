@@ -284,6 +284,7 @@ class Line extends Figure {
     }
 
     hideRefPoints() {
+        // if (p.circle == null) return;
         this.refPoints.forEach(p => svgPanel.removeChild(p.circle));
         svgPanel.removeChild(this.center.circle);
     }
