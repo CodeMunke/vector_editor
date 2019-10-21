@@ -31,4 +31,5 @@ function createSVGPanel() {
 	svgPanel.setAttribute('height', height);
 
 	svgGrid = new Grid(10);
+	gridButton.innerText = "Показать";
 }

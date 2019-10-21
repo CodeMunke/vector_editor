@@ -24,7 +24,7 @@ const openFile = (evt) => {
         }
         
         const childs = Array.prototype.slice.call(svgPanel.childNodes);
-        for (let i = 1; i < childs.length; i++) {
+        for (let i = 0; i < childs.length; i++) {
             switch(childs[i].nodeName) {
                 case 'rect':
                     Rectangle.create(childs[i]);
@@ -43,7 +43,12 @@ const openFile = (evt) => {
                     break;
                 case 'line':
                     Line.create(childs[i]);
-                    break;     
+                    break;  
+                case 'g':
+                    if (childs[i].id == "grid") {
+                        Grid.createFromSVGGroup(childs[i]);
+                    }
+                    break;      
             }
         }
     };
