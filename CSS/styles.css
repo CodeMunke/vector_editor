@@ -138,7 +138,7 @@
     cursor: pointer;
   }
   .vertical-menu input[type="radio"]:hover + label {
-    background-color: #30638a;
+    background-color: #6292b6;
   }
   .vertical-menu input[type="radio"]:checked + label {
     background-color: #6793b4;
