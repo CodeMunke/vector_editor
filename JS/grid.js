@@ -2,16 +2,20 @@
 
 class Grid {
     constructor(gap) {
+        /**  Массив для вертикальных линий сетки */
         this.gridLineArrayVer = new Array();
+        /**  Массив для горизонтальных линий сетки */
         this.gridLineArrayHor = new Array();
+        /** Флаг видимости */
         this.visible = false;
-        this.gridGroup = document.createElement('g');
-        this.gridGroup.setAttribute('id', "grid");
-        svgPanel.appendChild(this.gridGroup);
-        // svgPanel.insertAdjacentElement('afterbegin', g);
-        // svgPanel.insertAdjacentHTML('afterbegin',"<g id = \"grid\" >");
+        /**  HTML-объект сетки. Имеет аттрибут "grid". Для фактических изменений в сетке, писать сюда.*/
+        this.gridObj = document.createElementNS(svgNS, 'g');
+        this.gridObj.setAttribute('id', "grid");
 
         this.draw(gap);
+        svgPanel.appendChild(this.gridObj);
+        // svgPanel.insertAdjacentElement('afterbegin', g);
+        // svgPanel.insertAdjacentHTML('afterbegin',"<g id = \"grid\" >");
     }
 
     draw(gap) {
@@ -29,7 +33,7 @@ class Grid {
             line.setAttribute("y2", height);
             line.setAttribute("opacity", 0);
             this.gridLineArrayVer.push(line);
-            this.gridGroup.appendChild(line);
+            this.gridObj.appendChild(line);
         }
         for (let i = 0; i <= height; i += gap) {
             let line = createSVGElem('line',
@@ -43,17 +47,17 @@ class Grid {
             line.setAttribute("y2", i);
             line.setAttribute("opacity", 0);
             this.gridLineArrayHor.push(line);
-            this.gridGroup.appendChild(line);
+            this.gridObj.appendChild(line);
         }
     }
 
     show () {
         this.visible = true;
         for (let i = 0; i < this.gridLineArrayHor.length; i++) {
-            this.gridLineArrayHor[i].setAttribute("opacity", 0.7);
+            this.gridLineArrayHor[i].setAttribute("opacity", 0.5);
         }
         for (let i = 0; i < this.gridLineArrayVer.length; i++) {
-            this.gridLineArrayVer[i].setAttribute("opacity", 0.7);
+            this.gridLineArrayVer[i].setAttribute("opacity", 0.5);
         }
     }
 
@@ -69,10 +73,10 @@ class Grid {
 
     redraw(newGap, show = 1) {
         for (let i = 0; i < this.gridLineArrayHor.length; i++) {
-            svgPanel.removeChild(this.gridLineArrayHor[i], svgPanel);
+            this.gridObj.removeChild(this.gridLineArrayHor[i], this.gridObj);
         }
         for (let i = 0; i < this.gridLineArrayVer.length; i++) {
-            svgPanel.removeChild(this.gridLineArrayVer[i], svgPanel);
+            this.gridObj.removeChild(this.gridLineArrayVer[i], this.gridObj);
         }
 
         this.gridLineArrayVer = new Array();
