@@ -2,6 +2,7 @@
 
 const opacityVisible = 0.5;
 const opacityInvisible = 0;
+const specialObjectOpacity = 1;
 
 
 class Grid {
@@ -30,15 +31,57 @@ class Grid {
         this.horLineGroup = document.createElementNS(svgNS, 'g');
         this.horLineGroup.setAttribute('id', "horLines");
 
+        /** HTML-объект для группировки горизонтальных линий */
+        this.specialObjects = document.createElementNS(svgNS, 'g');
+        this.specialObjects.setAttribute('id', "specObj");
+        this.specialObjects.setAttribute('opacity', 0);
+
+        this.beginningText = document.createElementNS(svgNS, 'text');
+        this.beginningPoint = createSVGElem('circle', null, null, 1, 1, 1);
+
+        this.specialObjects.appendChild(this.beginningText);
+        this.specialObjects.appendChild(this.beginningPoint);
+
+
         /* Если задан размер клетки, рендерим сеть немедленно */
-        if (gap != null) this.render(gap);
+        if (gap != null) {
+            // this.beginningText.setAttribute('x', 5);
+            // this.beginningText.setAttribute('y', 15);
+            // this.beginningText.setAttribute('class', "svg-text");
+            // this.beginningText.textContent = "(0, 0)";
+
+            // this.beginningPoint.setAttribute("cx", 0);
+            // this.beginningPoint.setAttribute("cy", 0);
+            // this.beginningPoint.setAttribute("r", 5);
+
+            this.render(gap);
+        }
         /* Если нет, откладываем рендеринг */
         svgPanel.appendChild(this.gridObj);
         this.gridObj.appendChild(this.verLineGroup);
         this.gridObj.appendChild(this.horLineGroup);
+        svgPanel.appendChild(this.specialObjects);
     }
 
     render(gap) {
+        const renderBeginningText = () => {
+            this.beginningText = document.createElementNS(svgNS, 'text');
+            this.beginningText.setAttribute('x', 5);
+            this.beginningText.setAttribute('y', 15);
+            this.beginningText.setAttribute('class', "svg-text");
+            this.beginningText.textContent = "(0, 0)";
+            this.specialObjects.appendChild(this.beginningText);
+        }
+
+        const renderBeginningPoint = () => {
+            this.beginningPoint = createSVGElem('circle', null, null, 1, 1, 1);
+            this.beginningPoint.setAttribute("cx", 0);
+            this.beginningPoint.setAttribute("cy", 0);
+            this.beginningPoint.setAttribute("r", 5);
+            this.specialObjects.appendChild(this.beginningPoint);
+        }
+
+
         let width = svgPanel.getAttribute('width');
         let height = svgPanel.getAttribute('height');
         for (let i = 0; i <= width; i += gap) {
@@ -52,6 +95,11 @@ class Grid {
             line.setAttribute("x2", i);
             line.setAttribute("y2", height);
             this.gridLineArrayVer.push(line);
+            if (i == 0) {
+                line.setAttribute('stroke-width', 3);
+                this.specialObjects.appendChild(line);
+                continue;
+            }
             this.verLineGroup.appendChild(line);
         }
         for (let i = 0; i <= height; i += gap) {
@@ -65,12 +113,21 @@ class Grid {
             line.setAttribute("x2", width);
             line.setAttribute("y2", i);
             this.gridLineArrayHor.push(line);
+            if (i == 0) {
+                line.setAttribute('stroke-width', 3);
+                this.specialObjects.appendChild(line);
+                continue;
+            }
             this.horLineGroup.appendChild(line);
         }
+
+        renderBeginningText();
+        renderBeginningPoint();
     }
 
     static createFromSVGGroup(svgGridGroup) {
         svgGrid = new Grid(null);
+        
 
         let groups = Array.prototype.slice.call(svgGridGroup.childNodes);
         let verLines = Array.prototype.slice.call(groups[0].childNodes);
@@ -91,23 +148,36 @@ class Grid {
         }
     }
 
+    static recreateSpecialObj(svgSpecObjGroup) {
+        let objects = Array.prototype.slice.call(svgSpecObjGroup.childNodes);
+
+        if (svgSpecObjGroup.getAttribute("opacity") == specialObjectOpacity) {
+            svgGrid.visible = true;
+            svgGrid.specialObjects.setAttribute("opacity", specialObjectOpacity);
+            gridButton.innerText = "Скрыть";
+        }
+        for (let i = 0; i < objects.length; i++) {
+            svgGrid.specialObjects.appendChild(objects[i]);
+        }
+    }
+
+
     show () {
         this.visible = true;
         this.gridObj.setAttribute("opacity", opacityVisible);
+        this.specialObjects.setAttribute("opacity", specialObjectOpacity);
     }
 
     hide () {
         this.visible = false;
         this.gridObj.setAttribute("opacity", opacityInvisible);
+        this.specialObjects.setAttribute("opacity", opacityInvisible);
     }
 
     redraw(newGap, show = 1) {
-        for (let i = 0; i < this.gridLineArrayHor.length; i++) {
-            this.horLineGroup.removeChild(this.gridLineArrayHor[i], this.horLineGroup);
-        }
-        for (let i = 0; i < this.gridLineArrayVer.length; i++) {
-            this.verLineGroup.removeChild(this.gridLineArrayVer[i], this.verLineGroup);
-        }
+        deleteAllChildren(this.specialObjects);
+        deleteAllChildren(this.horLineGroup);
+        deleteAllChildren(this.verLineGroup);
 
         this.gridLineArrayVer = new Array();
         this.gridLineArrayHor = new Array();
@@ -133,20 +203,16 @@ gridButton.addEventListener('click', function() {
     }
 });
 
-// drawPanel.addEventListener('mousedown', Grid.redraw = Grid.redraw.bind());
-
-{
-    const inputs = optionsGrid.getElementsByTagName('input');
-    const selectors = optionsGrid.getElementsByTagName('ul');
-    inputs[0].addEventListener('keydown', (e) => {
-        if (e.keyCode == 13) {
-            if (inputs[0].value < 0) {
-                inputs[0].value = 0;
-            }
-            svgGrid.redraw(parseInt(inputs[0].value, 10), svgGrid.visible)
+const inputs = optionsGrid.getElementsByTagName('input');
+const selectors = optionsGrid.getElementsByTagName('ul');
+inputs[0].addEventListener('keydown', (e) => {
+    if (e.keyCode == 13) {
+        if (inputs[0].value < 0) {
+            inputs[0].value = 0;
         }
-    })
-    selectors[0].addEventListener('click', () => {
-        svgGrid.redraw(parseInt(inputs[0].value, 10), svgGrid.visible);
-    })
-}
+        svgGrid.redraw(parseInt(inputs[0].value, 10), svgGrid.visible)
+    }
+})
+selectors[0].addEventListener('click', () => {
+    svgGrid.redraw(parseInt(inputs[0].value, 10), svgGrid.visible);
+})

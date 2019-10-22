@@ -380,3 +380,7 @@
       border-radius: 4px;
       background-color: #fff;
   }  
+
+  .svg-text {
+    font: 7pt Roboto;
+  }

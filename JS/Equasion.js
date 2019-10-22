@@ -45,7 +45,14 @@ class LineEquasion {
         let transf_matr = [[1  , 0  , 0],
                            [0  , 1  , 0],
                            [d.x, d.y, 1]];
-        this.mat = MultiplyMatrix(mat, transf_matr);
+        this.mat = MultiplyMatrix(this.mat, transf_matr);
+    }
+
+    scale (a, d) {
+        let scale_matr =  [[a  , 0  , 0],
+                           [0  , d  , 0],
+                           [0  , 0  , 1]];
+        this.mat = MultiplyMatrix(this.mat, scale_matr);
     }
 
     updateEquasionByPoints (p, q) {
@@ -140,4 +147,44 @@ class LineEquasion {
         this._C = val;
     }
     
+}
+
+
+var isConverter = function(element) {
+    if (element.alt == currentInstrument.alt){
+        currentConversion = element;
+        return true;
+    }
+    return false;
+}
+
+for (let i = 0; i < transferTools.length; i++) {
+    transferTools[i].addEventListener('click', function () {
+        if (currentFigure != null) {
+            if (currentFigure instanceof Line) {
+                switch (transferTools[i].alt) {
+                    case "Перемещение":
+                        alert("перемещение!");
+                        // currentInstrument = document.getElementById('cursor');
+                        break;
+                    case "Масштабирование":
+                        alert("Масштабирование!");
+                        // currentInstrument = document.getElementById('cursor');
+                        break;
+                    case "Вращение":
+                
+                        break;
+                    case "Зеркалирование":
+            
+                        break;
+                    case "Проецирование":
+        
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+        }
+    })
 }

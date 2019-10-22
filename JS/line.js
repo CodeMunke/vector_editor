@@ -382,3 +382,4 @@ drawPanel.addEventListener('mousedown', Line.draw = Line.draw.bind(Line));
     //     }
     // });
 }
+

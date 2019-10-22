@@ -7,7 +7,10 @@ const instruments = [];
 // const ids = ['cursor', 'hand', 'pen', 'text',
 //     'line', 'ellipse', 'rect', 'polygon',
 //     'brush', 'eraser', 'pipette', 'zoom'];
-const ids = ['cursor', 'hand', 'line', 'grid'];
+const ids = ['cursor', 'hand', 'line', 'grid', 'transfer'
+            , 'scale', 'rotate', 'mirror', 'project'];
+
+const transferTools = [];
 
 /*Текущий выбранный инструмент*/
 let currentInstrument = null;
@@ -30,6 +33,10 @@ for (let i = 0; i < ids.length; i++) {
     instruments[i].addEventListener('click', function() { currentInstrument = this; });
     instruments[i].addEventListener('click', changeLabelSelected);
     instruments[i].addEventListener('click', showOptions);
+    if (instruments[i].id == "transfer" || instruments[i].id == "scale" || instruments[i].id == "rotate" 
+    || instruments[i].id == "mirror" || instruments[i].id == "project") {
+        transferTools.push(instruments[i]);
+    }
 }
 
 // let buttonColor = document.getElementById('button-color');

@@ -13,6 +13,10 @@ const openFile = (evt) => {
         svgPanel = document.getElementById('svg-panel');
         
         const rects = svgPanel.getElementsByTagName('rect');
+        const specialCircles = svgGrid.specialObjects.getElementsByTagName('circle');
+        while (specialCircles.length > 0) {
+            svgGrid.specialObjects.removeChild(specialCircles[0]);
+        }
         const circles = svgPanel.getElementsByTagName('circle');
         for (let i = 0; i < rects.length; i++) {
             if (rects[i].getAttribute('stroke-opacity') === '0.5') {
@@ -20,6 +24,9 @@ const openFile = (evt) => {
             }    
         }
         while (circles.length > 0) {
+            if (circles[0].parentNode.getAttribute("id") == "specObj") {
+                circles[0].parentNode.removeChild(circles[0]);
+            }
             svgPanel.removeChild(circles[0]);
         }
         
@@ -47,6 +54,9 @@ const openFile = (evt) => {
                 case 'g':
                     if (childs[i].id == "grid") {
                         Grid.createFromSVGGroup(childs[i]);
+                    }
+                    if (childs[i].id == "specObj") {
+                        Grid.recreateSpecialObj(childs[i]);
                     }
                     break;      
             }

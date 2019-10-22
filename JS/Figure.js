@@ -10,6 +10,8 @@ const polygon = document.getElementById('polygon');
 cursor.addEventListener('click', () => {
     if (currentFigure !== null) {
         currentFigure.showOptions();
+        // focus = currentFigure;
+
     }
 });
 
