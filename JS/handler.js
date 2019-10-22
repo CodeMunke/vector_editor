@@ -21,10 +21,11 @@ let currentFigure = null;
 /*Захвачена ли опорная точка некоторой фигуры*/
 let someFigureTaken = false;
 
+let pendingConversion;
+
 const drawPanel = document.getElementById('workspace');
 const leftPanel = document.getElementById('left-panel');
 let svgPanel = document.getElementById('svg-panel');
-// let gridPanel = document.getElementById('grid-panel');
 const svgNS = 'http://www.w3.org/2000/svg';
 
 /*Добавление всех инструментов в массив и присваивание обработчиков*/

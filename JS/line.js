@@ -1,6 +1,8 @@
 /*Скрипт для работы инструмента "Прямая"*/
 'use strict';
 
+var currentLine;
+
 class Line extends Figure {
     constructor(svgFigure) {
         super(svgFigure);
@@ -8,13 +10,14 @@ class Line extends Figure {
         this.center.circle.onmousedown = this.moveLine.bind(this);
 
         let isErasing = false;
-        // this.svgFig.addEventListener('mousedown', this.erase.bind(this));
         this.svgFig.addEventListener('mousemove', this.start.bind(this));
 
         this.refPoints.push(new LinePoint(this));
         this.refPoints.push(new LinePoint(this));
         
         this.eq = new LineEquasion(this.refPoints[0], this.refPoints[1]);
+
+        this.svgFig.addEventListener('mousedown', this.eq.coversion_wrapper.bind(this));
     }
 
     static create(svgFigure) {

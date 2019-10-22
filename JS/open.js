@@ -26,6 +26,7 @@ const openFile = (evt) => {
         while (circles.length > 0) {
             if (circles[0].parentNode.getAttribute("id") == "specObj") {
                 circles[0].parentNode.removeChild(circles[0]);
+                continue;
             }
             svgPanel.removeChild(circles[0]);
         }

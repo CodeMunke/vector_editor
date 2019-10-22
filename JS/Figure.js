@@ -11,7 +11,6 @@ cursor.addEventListener('click', () => {
     if (currentFigure !== null) {
         currentFigure.showOptions();
         // focus = currentFigure;
-
     }
 });
 

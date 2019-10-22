@@ -41,18 +41,62 @@ class LineEquasion {
         var norm_required = false;
     }
 
-    transfer (d) {
+    static transfer (eq , d) {
         let transf_matr = [[1  , 0  , 0],
                            [0  , 1  , 0],
                            [d.x, d.y, 1]];
-        this.mat = MultiplyMatrix(this.mat, transf_matr);
+        eq.mat = MultiplyMatrix(eq.mat, transf_matr);
     }
 
-    scale (a, d) {
-        let scale_matr =  [[a  , 0  , 0],
-                           [0  , d  , 0],
-                           [0  , 0  , 1]];
-        this.mat = MultiplyMatrix(this.mat, scale_matr);
+    coversion_wrapper (event) {
+        if (pendingConversion != null) {
+            let width = svgPanel.getAttribute('width');
+            let height = svgPanel.getAttribute('height');
+            switch (pendingConversion) {
+                case "transfer":
+                    let dest_x = prompt("Введите новую координату Х:");
+                    let dest_y = prompt("Введите новую координату Y:");
+                    if ((dest_x > width || dest_x < 1) || (dest_y > height || dest_y < 1)) {
+                        alert("Пожалуйста, введите корректные данные!")
+                        return;
+                    }
+                    var diff = {
+                        x: dest_x - this.center.x,
+                        y: dest_y - this.center.y
+                    };
+                    let mat = this.eq.mat;
+                    LineEquasion.transfer(this.eq, diff);
+                    this.refPoints[0].setCoords({x: mat[p_n][0], y: mat[p_n][1]});
+                    this.refPoints[1].setCoords({x: mat[q_n][0], y: mat[q_n][1]});
+                    this.updateRefPointsCoords();
+                    break;
+                case "Масштабирование":
+                    alert("Масштабирование!");
+                    break;
+                case "Вращение":
+            
+                    break;
+                case "Зеркалирование":
+        
+                    break;
+                case "Проецирование":
+    
+                    break;
+            
+                default:
+                    break;
+            }
+            drawPanel.style.cursor = "default";
+            pendingConversion = null;
+            instruments[0].click();
+        }
+    }
+
+    static scale (eq, scale_parms) {
+        let scale_matr =  [[scale_parms.a  , 0  , 0],
+                           [0  , scale_parms.d  , 0],
+                           [0  ,        0  ,      1]];
+        eq.mat = MultiplyMatrix(eq.mat, scale_matr);
     }
 
     updateEquasionByPoints (p, q) {
@@ -160,31 +204,29 @@ var isConverter = function(element) {
 
 for (let i = 0; i < transferTools.length; i++) {
     transferTools[i].addEventListener('click', function () {
-        if (currentFigure != null) {
-            if (currentFigure instanceof Line) {
-                switch (transferTools[i].alt) {
-                    case "Перемещение":
-                        alert("перемещение!");
-                        // currentInstrument = document.getElementById('cursor');
-                        break;
-                    case "Масштабирование":
-                        alert("Масштабирование!");
-                        // currentInstrument = document.getElementById('cursor');
-                        break;
-                    case "Вращение":
-                
-                        break;
-                    case "Зеркалирование":
-            
-                        break;
-                    case "Проецирование":
+        drawPanel.style.cursor = "crosshair";
+        switch (transferTools[i].alt) {
+            case "Перемещение":
+                pendingConversion = "transfer";
+                alert("Я кастую перемещение!");
+                // currentInstrument = document.getElementById('cursor');
+                break;
+            case "Масштабирование":
+                alert("Масштабирование!");
+                // currentInstrument = document.getElementById('cursor');
+                break;
+            case "Вращение":
         
-                        break;
-                
-                    default:
-                        break;
-                }
-            }
+                break;
+            case "Зеркалирование":
+    
+                break;
+            case "Проецирование":
+
+                break;
+        
+            default:
+                break;
         }
     })
 }
