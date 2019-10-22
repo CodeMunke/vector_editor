@@ -2,8 +2,8 @@
 /**
  * Для читаемости, где p и q - точки прямой
  */
-const p_n = 1;
-const q_n = 2;
+const p_n = 0;
+const q_n = 1;
 
 function MultiplyMatrix(A,B)
 {
@@ -22,6 +22,10 @@ function MultiplyMatrix(A,B)
     return C;
 }
 
+function DegToRad(degrees) {
+    return (degrees * Math.PI) / 180;
+}
+
 class LineEquasion {    
     constructor (p, q) {
         /*  Матрица прямой, заданная как векторное пр-ве 2-х точек:
@@ -29,8 +33,7 @@ class LineEquasion {
             |x1  y1  1|
             |x2  y2  1|
         */
-        this.mat = [[1  , 1  , 1],
-                    [p.x, p.y, 1],
+        this.mat = [[p.x, p.y, 1],
                     [q.x, q.y, 1]];
         /** Флаг деления на ноль */
         var divByZeroOccured = false;
@@ -41,11 +44,26 @@ class LineEquasion {
         var norm_required = false;
     }
 
-    static transfer (eq , d) {
+    transfer (d) {
         let transf_matr = [[1  , 0  , 0],
                            [0  , 1  , 0],
                            [d.x, d.y, 1]];
-        eq.mat = MultiplyMatrix(eq.mat, transf_matr);
+        return MultiplyMatrix(this.mat, transf_matr);
+    }
+
+    scale (scale_parms) {
+        let scale_matr =  [[scale_parms.a  , 0  , 0],
+                           [0  , scale_parms.d  , 0],
+                           [0  ,        0  ,      1]];
+        return MultiplyMatrix(this.mat, scale_matr);
+    }
+
+    rotate (angle) {
+        let radAngle = DegToRad(angle);
+        let rot_matr =  [[ Math.cos(radAngle).toFixed(5), Math.sin(radAngle).toFixed(5)  , 0],
+                           [-Math.sin(radAngle).toFixed(5), Math.cos(radAngle).toFixed(5)  , 0],
+                           [0                  ,                  0  , 1]];
+        return MultiplyMatrix(this.mat, rot_matr);
     }
 
     coversion_wrapper (event) {
@@ -64,39 +82,49 @@ class LineEquasion {
                         x: dest_x - this.center.x,
                         y: dest_y - this.center.y
                     };
-                    let mat = this.eq.mat;
-                    LineEquasion.transfer(this.eq, diff);
-                    this.refPoints[0].setCoords({x: mat[p_n][0], y: mat[p_n][1]});
-                    this.refPoints[1].setCoords({x: mat[q_n][0], y: mat[q_n][1]});
-                    this.updateRefPointsCoords();
+                    this.mat = this.eq.transfer(diff);
                     break;
-                case "Масштабирование":
-                    alert("Масштабирование!");
+                case "scale":
+                    let scale_x = prompt("Масштаб относительно оси Х:");
+                    let scale_y = prompt("Масштаб относительно оси Y:");
+                    if ((scale_x <= 0) || (scale_y <= 0)) {
+                        alert("Пожалуйста, введите корректные данные!")
+                        return;
+                    }
+                    var scale_parms = {
+                        a: scale_x,
+                        d: scale_y
+                    };
+                    this.mat = this.eq.scale(scale_parms);
                     break;
-                case "Вращение":
-            
+                case "rotate":
+                    let angle = prompt("Введите угол поворота в градусах:");
+                    // if ((angle > 360) || (angle < -360)) {
+                    //     alert("Пожалуйста, введите корректные данные!")
+                    //     return;
+                    // }
+                    this.mat = this.eq.rotate(angle);
                     break;
-                case "Зеркалирование":
+                case "mirror":
         
                     break;
-                case "Проецирование":
+                case "project":
     
                     break;
             
                 default:
                     break;
             }
+            let mat = this.mat;
+            this.x1 = mat[p_n][0];
+            this.y1 = mat[p_n][1];
+            this.x2 = mat[q_n][0];
+            this.y2 = mat[q_n][1];
+            this.updateRefPointsCoords();
             drawPanel.style.cursor = "default";
             pendingConversion = null;
             instruments[0].click();
         }
-    }
-
-    static scale (eq, scale_parms) {
-        let scale_matr =  [[scale_parms.a  , 0  , 0],
-                           [0  , scale_parms.d  , 0],
-                           [0  ,        0  ,      1]];
-        eq.mat = MultiplyMatrix(eq.mat, scale_matr);
     }
 
     updateEquasionByPoints (p, q) {
@@ -208,21 +236,18 @@ for (let i = 0; i < transferTools.length; i++) {
         switch (transferTools[i].alt) {
             case "Перемещение":
                 pendingConversion = "transfer";
-                alert("Я кастую перемещение!");
-                // currentInstrument = document.getElementById('cursor');
                 break;
             case "Масштабирование":
-                alert("Масштабирование!");
-                // currentInstrument = document.getElementById('cursor');
+                pendingConversion = "scale";
                 break;
             case "Вращение":
-        
+                pendingConversion = "rotate";
                 break;
             case "Зеркалирование":
-    
+                pendingConversion = "mirror";
                 break;
             case "Проецирование":
-
+                pendingConversion = "project";
                 break;
         
             default:
