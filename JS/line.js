@@ -79,6 +79,12 @@ class Line extends Figure {
     //     isErasing = true;
     // }
 
+    static getDist (src, dest) {
+        const dx = dest.x - src.x;
+        const dy = dest.y - src.y;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+
     start(event) {
         if (!this.isErasing) return;
 
@@ -87,12 +93,6 @@ class Line extends Figure {
             const y = (eraserCoord.x - src.x + eraserCoord.y/temp + temp*src.y) / (temp + 1/temp);
             const x = temp * (y - src.y) + src.x;
             return { x: x, y: y };
-        }
-
-        const getDist = (src, dest) => {
-            const dx = dest.x - src.x;
-            const dy = dest.y - src.y;
-            return Math.sqrt(dx*dx + dy*dy);
         }
         
         const options = optionsEraser.getElementsByTagName('input');

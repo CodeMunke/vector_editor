@@ -23,7 +23,7 @@ function MultiplyMatrix(A,B)
 }
 
 function DegToRad(degrees) {
-    return (degrees * Math.PI) / 180;
+    return degrees * (Math.PI / 180);
 }
 
 class LineEquasion {    
@@ -60,10 +60,23 @@ class LineEquasion {
 
     rotate (angle) {
         let radAngle = DegToRad(angle);
-        let rot_matr =  [[ Math.cos(radAngle).toFixed(5), Math.sin(radAngle).toFixed(5)  , 0],
-                           [-Math.sin(radAngle).toFixed(5), Math.cos(radAngle).toFixed(5)  , 0],
+        let rot_matr =  [[ parseFloat(Math.cos(radAngle)), parseFloat(Math.sin(radAngle))  , 0],
+                           [parseFloat(-Math.sin(radAngle)), parseFloat(Math.cos(radAngle)) , 0],
                            [0                  ,                  0  , 1]];
         return MultiplyMatrix(this.mat, rot_matr);
+    }
+
+    static absMatr(matr) {
+        if (matr instanceof Array) {
+            let absArr = [[], [], []];
+            for (let i = 0; i < matr.length; i++) {
+                for (let j = 0; j < matr[i].length; j++) {
+                    absArr[i][j] = Math.abs(matr[i][j]);
+                }
+            }
+            return absArr;
+        }
+        return false;
     }
 
     coversion_wrapper (event) {
@@ -96,6 +109,7 @@ class LineEquasion {
                         d: scale_y
                     };
                     this.mat = this.eq.scale(scale_parms);
+                    ;
                     break;
                 case "rotate":
                     let angle = prompt("Введите угол поворота в градусах:");
@@ -103,7 +117,17 @@ class LineEquasion {
                     //     alert("Пожалуйста, введите корректные данные!")
                     //     return;
                     // }
+                    let lineLength = Line.getDist(this.refPoints[0], this.refPoints[1]);
                     this.mat = this.eq.rotate(angle);
+                    var begPoint = {
+                        x: mat[p_n][0],
+                        y: mat[p_n][1]
+                    };
+                    var endPoint = {
+                        x: mat[q_n][0],
+                        y: mat[q_n][1]
+                    };
+                    if (begPoint.)
                     break;
                 case "mirror":
         
