@@ -25,7 +25,7 @@ let pendingConversion;
 
 const drawPanel = document.getElementById('workspace');
 const leftPanel = document.getElementById('left-panel');
-var  svgPanel = SVG('workspace').size(900, 500);
+var  svgPanel = SVG('workspace').size(900, 500).id('svg-panel');
 
 // let svgPanel = document.getElementById('svg-panel');
 const svgNS = 'http://www.w3.org/2000/svg';

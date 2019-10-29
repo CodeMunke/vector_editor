@@ -18,13 +18,13 @@ class Grid {
         /** Флаг видимости */
         this.visible = false;
         /**  HTML-объект сетки. Имеет аттрибут "grid". Для фактических изменений в сетке, писать сюда.*/
-        this.gridObj = svgPanel.group("grid").opacity(opacityInvisible);
+        this.gridObj = svgPanel.group("grid").opacity(opacityInvisible).id('grid');
 
-        this.verLineGroup = svgPanel.group("verLines");
+        this.verLineGroup = svgPanel.group("verLines").id("verLines");
 
-        this.horLineGroup = svgPanel.group("horLines");
+        this.horLineGroup = svgPanel.group("horLines").id("horLines");
 
-        this.specialObjects = svgPanel.group("specObj").opacity(opacityInvisible);
+        this.specialObjects = svgPanel.group("specObj").opacity(opacityInvisible).id("specObj");
 
 
         /* Если задан размер клетки, рендерим сеть немедленно */
@@ -40,8 +40,8 @@ class Grid {
         this.beginningText = svgPanel.text("(0, 0)").x(5).y(15).font({
             family: 'Roboto',
             size: 10,
-        });
-        this.beginningPoint = svgPanel.circle(5).x(0).y(0);
+        }).id("beginningText");
+        this.beginningPoint = svgPanel.circle(5).x(0).y(0).id("beginningPoint");
         this.specialObjects.add(this.beginningText);
         this.specialObjects.add(this.beginningPoint);
 
@@ -73,17 +73,17 @@ class Grid {
         svgGrid = new Grid(null);
         
 
-        let groups = Array.prototype.slice.call(svgGridGroup.childNodes);
-        let verLines = Array.prototype.slice.call(groups[0].childNodes);
-        let horLines = Array.prototype.slice.call(groups[1].childNodes);
+        let groups = svgGridGroup.children();
+        let verLines = groups[0].children();
+        let horLines = groups[1].children();
 
-        if (svgGridGroup.getAttribute("opacity") == opacityVisible) {
+        if (svgGridGroup.opacity() == opacityVisible) {
             svgGrid.visible = true;
-            svgGrid.gridObj.setAttribute("opacity", opacityVisible);
+            svgGrid.gridObj.opacity(opacityVisible);
             gridButton.innerText = "Скрыть";
         }
         for (let i = 0; i < verLines.length; i++) {
-            svgGrid.verLineGroup.appendChild(verLines[i]);
+            svgGrid.verLineGroup.add(verLines[i]);
             svgGrid.gridLineArrayVer.push(verLines[i]);
         }
         for (let i = 0; i < horLines.length; i++) {

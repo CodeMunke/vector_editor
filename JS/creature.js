@@ -31,7 +31,7 @@ function createSVGPanel() {
 	}
 
 	deleteAllChildren(drawPanel);
-	svgPanel = SVG('workspace').size(width, height);
+	svgPanel = SVG('workspace').size(width, height).id("svg-panel");
 
 	svgGrid = new Grid(10);
 	gridButton.innerText = "Показать";
