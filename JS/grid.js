@@ -18,111 +18,55 @@ class Grid {
         /** Флаг видимости */
         this.visible = false;
         /**  HTML-объект сетки. Имеет аттрибут "grid". Для фактических изменений в сетке, писать сюда.*/
-        this.gridObj = document.createElementNS(svgNS, 'g');
-        this.gridObj.setAttribute('id', "grid");
-        /* Атрибут группы передается по наследству всем её детям */
-        this.gridObj.setAttribute('opacity', opacityInvisible);
+        this.gridObj = svgPanel.group("grid").opacity(opacityInvisible);
 
-        /** HTML-объект для группировки вертикальных линий */
-        this.verLineGroup = document.createElementNS(svgNS, 'g');
-        this.verLineGroup.setAttribute('id', "verLines");
+        this.verLineGroup = svgPanel.group("verLines");
 
-        /** HTML-объект для группировки горизонтальных линий */
-        this.horLineGroup = document.createElementNS(svgNS, 'g');
-        this.horLineGroup.setAttribute('id', "horLines");
+        this.horLineGroup = svgPanel.group("horLines");
 
-        /** HTML-объект для группировки горизонтальных линий */
-        this.specialObjects = document.createElementNS(svgNS, 'g');
-        this.specialObjects.setAttribute('id', "specObj");
-        this.specialObjects.setAttribute('opacity', 0);
-
-        this.beginningText = document.createElementNS(svgNS, 'text');
-        this.beginningPoint = createSVGElem('circle', null, null, 1, 1, 1);
-
-        this.specialObjects.appendChild(this.beginningText);
-        this.specialObjects.appendChild(this.beginningPoint);
+        this.specialObjects = svgPanel.group("specObj").opacity(opacityInvisible);
 
 
         /* Если задан размер клетки, рендерим сеть немедленно */
         if (gap != null) {
-            // this.beginningText.setAttribute('x', 5);
-            // this.beginningText.setAttribute('y', 15);
-            // this.beginningText.setAttribute('class', "svg-text");
-            // this.beginningText.textContent = "(0, 0)";
-
-            // this.beginningPoint.setAttribute("cx", 0);
-            // this.beginningPoint.setAttribute("cy", 0);
-            // this.beginningPoint.setAttribute("r", 5);
-
             this.render(gap);
         }
         /* Если нет, откладываем рендеринг */
-        svgPanel.appendChild(this.gridObj);
-        this.gridObj.appendChild(this.verLineGroup);
-        this.gridObj.appendChild(this.horLineGroup);
-        svgPanel.appendChild(this.specialObjects);
+        this.gridObj.add(this.verLineGroup);
+        this.gridObj.add(this.horLineGroup);
     }
 
     render(gap) {
-        const renderBeginningText = () => {
-            this.beginningText = document.createElementNS(svgNS, 'text');
-            this.beginningText.setAttribute('x', 5);
-            this.beginningText.setAttribute('y', 15);
-            this.beginningText.setAttribute('class', "svg-text");
-            this.beginningText.textContent = "(0, 0)";
-            this.specialObjects.appendChild(this.beginningText);
-        }
+        this.beginningText = svgPanel.text("(0, 0)").x(5).y(15).font({
+            family: 'Roboto',
+            size: 10,
+        });
+        this.beginningPoint = svgPanel.circle(5).x(0).y(0);
+        this.specialObjects.add(this.beginningText);
+        this.specialObjects.add(this.beginningPoint);
 
-        const renderBeginningPoint = () => {
-            this.beginningPoint = createSVGElem('circle', null, null, 1, 1, 1);
-            this.beginningPoint.setAttribute("cx", 0);
-            this.beginningPoint.setAttribute("cy", 0);
-            this.beginningPoint.setAttribute("r", 5);
-            this.specialObjects.appendChild(this.beginningPoint);
-        }
-
-
-        let width = svgPanel.getAttribute('width');
-        let height = svgPanel.getAttribute('height');
+        let width = svgPanel.width();
+        let height = svgPanel.height();
         for (let i = 0; i <= width; i += gap) {
-            let line = createSVGElem('line',
-            'undefined',
-            paletteColor,
-            '1',
-            '1');
-            line.setAttribute("x1", i);
-            line.setAttribute("y1", 0);
-            line.setAttribute("x2", i);
-            line.setAttribute("y2", height);
+            let line = svgPanel.line(i, 0, i, height).stroke({width: 1});
             this.gridLineArrayVer.push(line);
             if (i == 0) {
-                line.setAttribute('stroke-width', 3);
-                this.specialObjects.appendChild(line);
+                line.stroke({width: 3});
+                this.specialObjects.add(line);
                 continue;
             }
-            this.verLineGroup.appendChild(line);
+            this.verLineGroup.add(line);
         }
         for (let i = 0; i <= height; i += gap) {
-            let line = createSVGElem('line',
-            'undefined',
-            paletteColor,
-            '1',
-            '1');
-            line.setAttribute("x1", 0);
-            line.setAttribute("y1", i);
-            line.setAttribute("x2", width);
-            line.setAttribute("y2", i);
+            let line = svgPanel.line(0, i, width, i).stroke({width: 1});
             this.gridLineArrayHor.push(line);
             if (i == 0) {
-                line.setAttribute('stroke-width', 3);
-                this.specialObjects.appendChild(line);
+                line.stroke({width: 3});
+                this.specialObjects.add(line);
                 continue;
             }
-            this.horLineGroup.appendChild(line);
+            this.horLineGroup.add(line);
         }
-
-        renderBeginningText();
-        renderBeginningPoint();
     }
 
     static createFromSVGGroup(svgGridGroup) {
@@ -164,17 +108,18 @@ class Grid {
 
     show () {
         this.visible = true;
-        this.gridObj.setAttribute("opacity", opacityVisible);
-        this.specialObjects.setAttribute("opacity", specialObjectOpacity);
+        this.gridObj.opacity(opacityVisible);
+        this.specialObjects.opacity(specialObjectOpacity);
     }
 
     hide () {
         this.visible = false;
-        this.gridObj.setAttribute("opacity", opacityInvisible);
-        this.specialObjects.setAttribute("opacity", opacityInvisible);
+        this.gridObj.opacity(opacityInvisible);
+        this.specialObjects.opacity(opacityInvisible);
     }
 
     redraw(newGap, show = 1) {
+
         deleteAllChildren(this.specialObjects);
         deleteAllChildren(this.horLineGroup);
         deleteAllChildren(this.verLineGroup);

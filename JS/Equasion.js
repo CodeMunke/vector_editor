@@ -81,8 +81,8 @@ class LineEquasion {
 
     coversion_wrapper (event) {
         if (pendingConversion != null) {
-            let width = svgPanel.getAttribute('width');
-            let height = svgPanel.getAttribute('height');
+            let width = svgPanel.width();
+            let height = svgPanel.height();
             switch (pendingConversion) {
                 case "transfer":
                     let dest_x = prompt("Введите новую координату Х:");
@@ -127,7 +127,6 @@ class LineEquasion {
                         x: mat[q_n][0],
                         y: mat[q_n][1]
                     };
-                    if (begPoint.)
                     break;
                 case "mirror":
         

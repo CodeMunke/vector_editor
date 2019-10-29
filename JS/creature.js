@@ -11,8 +11,13 @@ function deleteChild( node, parent ) {
 }
 
 function deleteAllChildren( node ) {
-	for (var i = 0; i < node.childNodes.length;)
-	  deleteChild(node.childNodes[i], node);
+	if (node instanceof HTMLElement) {
+		for (var i = 0; i < node.childNodes.length;)
+		deleteChild(node.childNodes[i], node);
+	}
+	else {
+		node.clear();
+	}
 }
 
 function createSVGPanel() {
@@ -20,15 +25,13 @@ function createSVGPanel() {
 	  width = prompt('Введите ширину нового поля', 900),
 	  height = prompt('Введите высоту нового поля', 500);
 
-	if (width < 1 || height < 1){
+	if (width < 1 || height < 1) {
 		alert("Пожалуйста, введите корректные данные!")
 		return;
 	}
 
-	deleteAllChildren(svgPanel);
-
-	svgPanel.setAttribute('width', width);
-	svgPanel.setAttribute('height', height);
+	deleteAllChildren(drawPanel);
+	svgPanel = SVG('workspace').size(width, height);
 
 	svgGrid = new Grid(10);
 	gridButton.innerText = "Показать";

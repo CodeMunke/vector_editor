@@ -1,7 +1,7 @@
 /* Сохранение файла в нужное пространство */
 
 function saveSVG() {
-    var svgData = drawPanel.innerHTML.toString();
+    var svgData = svgPanel.svg();
 
     var fileName = prompt('Введите, пожалуйста, имя файла без расширения:');
 
