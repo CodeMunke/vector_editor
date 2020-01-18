@@ -87,21 +87,22 @@ class Grid {
             svgGrid.gridLineArrayVer.push(verLines[i]);
         }
         for (let i = 0; i < horLines.length; i++) {
-            svgGrid.horLineGroup.appendChild(horLines[i]);
+            svgGrid.horLineGroup.add(horLines[i]);
             svgGrid.gridLineArrayHor.push(horLines[i]);
         }
     }
 
     static recreateSpecialObj(svgSpecObjGroup) {
-        let objects = Array.prototype.slice.call(svgSpecObjGroup.childNodes);
-
-        if (svgSpecObjGroup.getAttribute("opacity") == specialObjectOpacity) {
+        // let objects = Array.prototype.slice.call(svgSpecObjGroup.childNodes);
+        let objects = svgSpecObjGroup.children();
+        
+        if (svgSpecObjGroup.opacity() == specialObjectOpacity) {
             svgGrid.visible = true;
-            svgGrid.specialObjects.setAttribute("opacity", specialObjectOpacity);
+            svgGrid.specialObjects.opacity(specialObjectOpacity);
             gridButton.innerText = "Скрыть";
         }
         for (let i = 0; i < objects.length; i++) {
-            svgGrid.specialObjects.appendChild(objects[i]);
+            svgGrid.specialObjects.add(objects[i]);
         }
     }
 

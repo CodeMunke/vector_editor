@@ -71,10 +71,16 @@ const openFile = (evt) => {
                 //     break;
                 case 'line':
                     Line.create(childs[i]);
-                    break;  
+                    break;
+                case 'circle':
+                    delete childs[i];
+                    break;
                 case 'defs':
-                    childs[i].remove();
-                    i--;
+                    // childs[i].remove();
+                    delete childs[i];
+                    // let arrCopy = childs.slice(0);
+                    // childs = arrCopy;
+                    // i--;
                     break; 
                 case 'g':
                     if (childs[i].id() == "grid") {

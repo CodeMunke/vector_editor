@@ -74,7 +74,7 @@ class Figure {
         } ).bind(this);
         drawPanel.addEventListener('mousedown', hide);
 
-        this.svgFig.addEventListener('mousedown', ( () => {
+        this.svgFig.mousedown(( () => {
             if (check() && !this.isShowing && cursor.checked) {
                 this.showRefPoints();
                 this.showOptions();
@@ -82,24 +82,42 @@ class Figure {
                 this.isShowing = true;
             }
         } ).bind(this));
+        // this.svgFig.addEventListener('mousedown', ( () => {
+        //     if (check() && !this.isShowing && cursor.checked) {
+        //         this.showRefPoints();
+        //         this.showOptions();
+        //         currentFigure = this;
+        //         this.isShowing = true;
+        //     }
+        // } ).bind(this));
 
-        this.svgFig.addEventListener('mouseover', () => {
+        this.svgFig.mouseover(() => {
             if (check() && (!this.isShowing || cursor.checked)) {
                 drawPanel.removeEventListener('mousedown', hide);
             }
         });
-        this.svgFig.addEventListener('mouseout', () => {
+        // this.svgFig.addEventListener('mouseover', () => {
+        //     if (check() && (!this.isShowing || cursor.checked)) {
+        //         drawPanel.removeEventListener('mousedown', hide);
+        //     }
+        // });
+        this.svgFig.mouseout(() => {
             if (check()) {
                 drawPanel.addEventListener('mousedown', hide);
             }
         });
+        // this.svgFig.addEventListener('mouseout', () => {
+        //     if (check()) {
+        //         drawPanel.addEventListener('mousedown', hide);
+        //     }
+        // });
     }
 
     createTmpCopy() {}
 
     deleteTmpCopy() {
-        svgPanel.removeChild(this.copy);
-        delete this.copy;
+        this.copy.remove();
+        // delete this.copy;
     }
 
     static addPanelListener(type, inputs, selectors, ind, update) {
@@ -127,12 +145,13 @@ class Figure {
 class RefPoint {
     constructor(figure, coords, instrument) {
         this.figure = figure;
-        this.circle = createSVGElem('circle', '#FFFFFF', '#000000');
-        this.circle.setAttribute('r', 3);
-        this.circle.setAttribute('cx', coords.x);
-        this.circle.setAttribute('cy', coords.y);
-        this.circle.addEventListener('mouseover', this.dispatchAndColor.bind(this, 'mouseover', '#0000FF', instrument));
-        this.circle.addEventListener('mouseout', this.dispatchAndColor.bind(this, 'mouseout', '#FFFFFF', instrument));
+        this.circle = svgPanel.circle(9).fill({color: '#FFFFFF'}).x(coords.x).y(coords.y).stroke({color: '#000000'});
+        // this.circle = createSVGElem('circle', '#FFFFFF', '#000000');
+        // this.circle.setAttribute('r', 3);
+        // this.circle.setAttribute('cx', coords.x);
+        // this.circle.setAttribute('cy', coords.y);
+        this.circle.mouseover(this.dispatchAndColor.bind(this, 'mouseover', '#0000FF', instrument));
+        this.circle.mouseout(this.dispatchAndColor.bind(this, 'mouseout', '#FFFFFF', instrument));
     }
 
     static createSVGPoint(coords) {
@@ -145,8 +164,8 @@ class RefPoint {
     dispatchAndColor(event, color, instrument) {
         if ( (instrument.checked && (!someFigureTaken || !this.figure.finished) ) ||
             (cursor.checked && !someFigureTaken) ) {
-            this.figure.svgFig.dispatchEvent(new Event(event));
-            this.circle.setAttribute('fill', color);
+            this.figure.svgFig.fire(new Event(event));
+            this.circle.fill({color: color});
         }
     }
 
@@ -158,10 +177,16 @@ class RefPoint {
         return this.x == other.x && this.y == other.y;
     }
 
-    set x(v) { this.circle.setAttribute('cx', v); }
-    set y(v) { this.circle.setAttribute('cy', v); }
-    set r(v) { this.circle.setAttribute('r', v); }
-    get x() { return +this.circle.getAttribute('cx'); }
-    get y() { return +this.circle.getAttribute('cy'); }
-    get r() { return +this.circle.getAttribute('r'); }
+    // set x(v) { this.circle.setAttribute('cx', v); }
+    // set y(v) { this.circle.setAttribute('cy', v); }
+    // set r(v) { this.circle.setAttribute('r', v); }
+    set x(v) { this.circle.cx(v); }
+    set y(v) { this.circle.cy(v); }
+    set r(v) { this.circle.radius(v); }
+    // get x() { return +this.circle.getAttribute('cx'); }
+    // get y() { return +this.circle.getAttribute('cy'); }
+    // get r() { return +this.circle.getAttribute('r'); }
+    get x() { return +this.circle.cx(); }
+    get y() { return +this.circle.cy(); }
+    get r() { return +this.circle.attr('r'); }
 }

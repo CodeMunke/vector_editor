@@ -7,26 +7,30 @@ class Line extends Figure {
     constructor(svgFigure) {
         super(svgFigure);
         this.center = new LinePoint(this);
-        this.center.circle.onmousedown = this.moveLine.bind(this);
+        this.center.circle.mousedown(this.moveLine.bind(this));
 
         let isErasing = false;
-        this.svgFig.addEventListener('mousemove', this.start.bind(this));
+        this.svgFig = svgFigure;
+        this.svgFig.mousemove(this.start.bind(this));
+        // this.svgFig.addEventListener('mousemove', this.start.bind(this));
 
         this.refPoints.push(new LinePoint(this));
         this.refPoints.push(new LinePoint(this));
         
         this.eq = new LineEquasion(this.refPoints[0], this.refPoints[1]);
-
-        this.svgFig.addEventListener('mousedown', this.eq.coversion_wrapper.bind(this));
+        
+        this.svgFig.mousedown(this.eq.coversion_wrapper.bind(this));
+        // this.svgFig.addEventListener('mousedown', this.eq.coversion_wrapper.bind(this));
     }
 
     static create(svgFigure) {
         const obj = new Line(svgFigure);
-        const get = attr => svgFigure.getAttribute(attr);
-        obj.setAttrs([get('x1'), get('y1'), get('x2'), get('y2')]);
+        // const get = attr => svgFigure.getAttribute(attr);
+        // obj.setAttrs([get('x1'), get('y1'), get('x2'), get('y2')]);
+        obj.svgFig.plot(svgFigure.array());
         obj.updateRefPointsCoords();
         obj.hideOrShow();
-        svgPanel.appendChild(obj.svgFig);
+        svgPanel.add(obj.svgFig);
         obj.isShowing = false;
         obj.finished = true;
         currentFigure = null;
@@ -39,17 +43,14 @@ class Line extends Figure {
         let click = getMouseCoords(event);
         let moving = false;
         const options = optionsLine.getElementsByTagName('input');
-        const obj = new Line(createSVGElem('line',
-            'undefined',
-            paletteColor,
-            options[0].value,
-            '1'));
-        svgPanel.appendChild(obj.svgFig);
+        const obj = new Line(svgPanel.line(0, 0, 0, 0).stroke({color: paletteColor, width: options[0].value, opacity: 1}));
+        // svgPanel.appendChild(obj.svgFig);
 
         const moveLine = (event) => {
             moving = true;
             const current = getMouseCoords(event);
-            obj.svgFig.setAttribute('stroke-opacity', '0.5');
+            obj.svgFig.stroke({opacity: 0.5})
+            // obj.svgFig.setAttribute('stroke-opacity', '0.5');
             obj.moveByAngeles(click, current);
             const dx = current.x - click.x;
             const dy = current.y - click.y;
@@ -60,10 +61,12 @@ class Line extends Figure {
             document.removeEventListener('mousemove', moveLine);
             drawPanel.removeEventListener('mouseup', stopMoving);
             if (!moving) {
-                svgPanel.removeChild(obj.svgFig);
+                obj.svgFig.remove();
+                // svgPanel.removeChild(obj.svgFig);
                 return;
             }
-            obj.svgFig.setAttribute('stroke-opacity', '1');
+            obj.svgFig.stroke({opacity: 1})
+            // obj.svgFig.setAttribute('stroke-opacity', '1');
             obj.updateRefPointsCoords();
             obj.hideOrShow();
             obj.showRefPoints();
@@ -194,9 +197,9 @@ class Line extends Figure {
             this.updateRefPointsCoords();
             newInd = this.findIndexMerged(this.getSymmetrical(fixed));
             if (newInd != ind) {
-                this.refPoints[ind].circle.setAttribute('fill', '#FFFFFF');
+                this.refPoints[ind].circle.fill({color: '#FFFFFF'});
                 ind = newInd;
-                this.refPoints[ind].circle.setAttribute('fill', '#0000FF');
+                this.refPoints[ind].circle.fill({color: '#0000FF'});
             }
             options[1].value = this.eq.toString();
         }).bind(this);
@@ -206,10 +209,10 @@ class Line extends Figure {
             if (upped !== undefined) return;
             this.deleteTmpCopy();
             this.somePointTaken = someFigureTaken = false;
-            this.refPoints[ind].circle.setAttribute('fill', '#FFFFFF');
+            this.refPoints[ind].circle.fill({color: '#FFFFFF'});
             document.removeEventListener('mousemove', movePoint);
             document.removeEventListener('keydown', returnToOld);
-            this.refPoints[ind].circle.addEventListener('mousedown', this.takePoint);
+            this.refPoints[ind].circle.mousedown(this.takePoint);
             drawPanel.removeEventListener('mouseup', stopMoving);
         };
 
@@ -223,10 +226,10 @@ class Line extends Figure {
 
         this.createTmpCopy();
         this.somePointTaken = someFigureTaken = true;
-        this.refPoints[ind].circle.setAttribute('fill', '#0000FF');
+        this.refPoints[ind].circle.fill({color: '#0000FF'});
         document.addEventListener('mousemove', movePoint);
         document.addEventListener('keydown', returnToOld);
-        this.refPoints[ind].circle.removeEventListener('mousedown', this.takePoint);
+        this.refPoints[ind].circle.off('mousedown', this.takePoint);
         drawPanel.addEventListener('mouseup', stopMoving);
     }
 
@@ -248,8 +251,8 @@ class Line extends Figure {
         const stopMoving = (event) => {
             this.deleteTmpCopy();
             this.somePointTaken = someFigureTaken = false;
-            this.center.circle.setAttribute('fill', '#FFFFFF');
-            this.center.circle.addEventListener('mousedown', this.moveLine);
+            this.center.circle.fill({color: '#FFFFFF'});
+            this.center.circle.mousedown(this.moveLine);
             document.removeEventListener('mousemove', move);
             document.removeEventListener('keydown', returnToOld);
             drawPanel.removeEventListener('mouseup', stopMoving);
@@ -264,8 +267,8 @@ class Line extends Figure {
 
         this.createTmpCopy();
         this.somePointTaken = someFigureTaken = true;
-        this.center.circle.setAttribute('fill', '#0000FF');
-        this.center.circle.removeEventListener('mousedown', this.moveLine);
+        this.center.circle.fill({color: '#0000FF'});
+        this.center.circle.off('mousedown', this.moveLine);
         document.addEventListener('mousemove', move);
         document.addEventListener('keydown', returnToOld);
         drawPanel.addEventListener('mouseup', stopMoving);
@@ -282,13 +285,15 @@ class Line extends Figure {
     }
 
     showRefPoints() {
-        this.refPoints.forEach(p => svgPanel.appendChild(p.circle));
-        svgPanel.appendChild(this.center.circle);
+        this.refPoints.forEach(p => svgPanel.add(p.circle));
+        svgPanel.add(this.center.circle);
     }
 
     hideRefPoints() {
-        this.refPoints.forEach(p => svgPanel.removeChild(p.circle));
-        svgPanel.removeChild(this.center.circle);
+        // this.refPoints.forEach(p => svgPanel.removeChild(p.circle));
+        // svgPanel.removeChild(this.center.circle);
+        this.refPoints.forEach(p => p.circle.remove());
+        this.center.circle.remove();
     }
 
     moveByAngeles(a, c) {
@@ -311,31 +316,43 @@ class Line extends Figure {
     }
 
     createTmpCopy() {
-        this.copy = createSVGElem('line', 'undefined', '#000000', '1', '0.5');
-        this.copy.setAttribute('x1', this.x1);
-        this.copy.setAttribute('y1', this.y1);
-        this.copy.setAttribute('x2', this.x2);
-        this.copy.setAttribute('y2', this.y2);
-        svgPanel.insertBefore(this.copy, this.svgFigure);
+        this.copy = svgPanel.line(0, 0, 0, 0).stroke({color: '#000000', opacity: 0.5, width: 1});
+        // this.copy = createSVGElem('line', 'undefined', '#000000', '1', '0.5');
+        let pointArr = this.copy.array();
+        pointArr.value = [[this.x1, this.y1], [this.x2, this.y2]];
+        this.copy.plot(pointArr);
+        // this.copy.setAttribute('x1', this.x1);
+        // this.copy.setAttribute('y1', this.y1);
+        // this.copy.setAttribute('x2', this.x2);
+        // this.copy.setAttribute('y2', this.y2);
+        // svgPanel.insertBefore(this.copy, this.svgFigure);
     }
 
     showOptions() {
         hideAllOptions();
         optionsLine.classList.add('show-option');
         const options = optionsLine.getElementsByTagName('input');
-        options[0].value = this.svgFig.getAttribute('stroke-width');
+        options[0].value = this.svgFig.attr('stroke-width');
         options[1].value = this.eq.toString();
     }
 
-    set x1(v) { this.svgFig.setAttribute('x1', +v); }
-    set y1(v) { this.svgFig.setAttribute('y1', +v); }
-    set x2(v) { this.svgFig.setAttribute('x2', +v); }
-    set y2(v) { this.svgFig.setAttribute('y2', +v); }
+    set x1(v) { let a = this.svgFig.array(); a.value[0][0] = v; this.svgFig.plot(a); }
+    set y1(v) { let a = this.svgFig.array(); a.value[0][1] = v; this.svgFig.plot(a);}
+    set x2(v) { let a = this.svgFig.array(); a.value[1][0] = v; this.svgFig.plot(a); }
+    set y2(v) { let a = this.svgFig.array(); a.value[1][1] = v; this.svgFig.plot(a); }
 
-    get x1() { return +this.svgFig.getAttribute('x1'); }
-    get y1() { return +this.svgFig.getAttribute('y1'); }
-    get x2() { return +this.svgFig.getAttribute('x2'); }
-    get y2() { return +this.svgFig.getAttribute('y2'); }
+    // get x1() { return +this.svgFig.getAttribute('x1'); }
+    get x1() { return +this.svgFig.array().value[0][0]; }
+
+    get y1() { return +this.svgFig.array().value[0][1]; }
+    // get y1() { return +this.svgFig.getAttribute('y1'); }
+
+    // get x2() { return +this.svgFig.getAttribute('x2'); }
+    get x2() { return +this.svgFig.array().value[1][0]; }
+
+    // get y2() { return +this.svgFig.getAttribute('y2'); }
+    get y2() { return +this.svgFig.array().value[1][1]; }
+
     get  c() { return {x: (this.x1 + this.x2)/2, y: (this.y1 + this.y2)/2}; }
     get length() {
         const dx = this.x2 - this.x1;
@@ -347,7 +364,7 @@ class Line extends Figure {
 class LinePoint extends RefPoint {
     constructor(obj, coords = {x: 0, y: 0}) {
         super(obj, coords, line);
-        this.circle.addEventListener('mousedown', this.figure.takePoint.bind(this.figure));
+        this.circle.mousedown(this.figure.takePoint.bind(this.figure));
     }
 
     setCoords(coords) {
@@ -362,7 +379,7 @@ drawPanel.addEventListener('mousedown', Line.draw = Line.draw.bind(Line));
     const inputs = optionsLine.getElementsByTagName('input');
     const selectors = optionsLine.getElementsByTagName('ul');
     Figure.addPanelListener(Line, inputs, selectors, 0, () => {
-        currentFigure.svgFig.setAttribute('stroke-width', +inputs[0].value);
+        currentFigure.svgFig.stroke({width: +inputs[0].value});
     });
     Figure.addPanelListener(Line, inputs, selectors, 1, () => {
         // currentFigure.eq.normalize();
