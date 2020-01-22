@@ -19,8 +19,8 @@ class Line extends Figure {
         
         this.eq = new LineEquasion(this.refPoints[0], this.refPoints[1]);
         
-        this.svgFig.mousedown(this.eq.coversion_wrapper.bind(this));
-        // this.svgFig.addEventListener('mousedown', this.eq.coversion_wrapper.bind(this));
+        this.svgFig.mousedown(this.eq.conversion_wrapper.bind(this));
+        // this.svgFig.addEventListener('mousedown', this.eq.conversion_wrapper.bind(this));
     }
 
     static create(svgFigure) {
@@ -30,7 +30,8 @@ class Line extends Figure {
         obj.svgFig.plot(svgFigure.array());
         obj.updateRefPointsCoords();
         obj.hideOrShow();
-        svgPanel.add(obj.svgFig);
+        obj.hideRefPoints();
+        // svgPanel.add(obj.svgFig);
         obj.isShowing = false;
         obj.finished = true;
         currentFigure = null;
@@ -43,7 +44,7 @@ class Line extends Figure {
         let click = getMouseCoords(event);
         let moving = false;
         const options = optionsLine.getElementsByTagName('input');
-        const obj = new Line(svgPanel.line(0, 0, 0, 0).stroke({color: paletteColor, width: options[0].value, opacity: 1}));
+        const obj = new Line(svgPanel.line(click.x, click.y, click.x + 1, click.y + 1).stroke({color: paletteColor, width: options[0].value, opacity: 1}));
         // svgPanel.appendChild(obj.svgFig);
 
         const moveLine = (event) => {

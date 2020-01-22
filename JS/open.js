@@ -5,6 +5,9 @@
 'use strict';
 
 const openFile = (evt) => {
+    // svgPanel.clear();
+    // delete svgPanel;
+
     const f = evt.target.files[0];
      
     const reader = new FileReader();

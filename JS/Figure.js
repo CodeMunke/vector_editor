@@ -8,7 +8,7 @@ const polygon = document.getElementById('polygon');
 
 /* Отобразить панель опций фигуры, по которой произойдет клик: */
 cursor.addEventListener('click', () => {
-    if (currentFigure !== null) {
+    if (currentFigure != null) {
         currentFigure.showOptions();
         // focus = currentFigure;
     }
@@ -19,7 +19,8 @@ document.addEventListener('keydown', (e) => {
     if (e.keyCode == 46 && currentFigure !== null && !currentFigure.somePointTaken && !someFigureTaken) {
         showOptions();
         currentFigure.hideRefPoints();
-        svgPanel.removeChild(currentFigure.svgFig);
+        currentFigure.svgFig.remove();
+        // svgPanel.removeChild(currentFigure.svgFig);
         currentFigure.svgFig = null;
         currentFigure = null;
     }

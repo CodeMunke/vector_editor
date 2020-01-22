@@ -47,7 +47,7 @@ class Grid {
 
         let width = svgPanel.width();
         let height = svgPanel.height();
-        for (let i = 0; i <= width; i += gap) {
+        for (let i = 0, axisMarkGap = 0; i <= width; i += gap, axisMarkGap++) {
             let line = svgPanel.line(i, 0, i, height).stroke({width: 1});
             this.gridLineArrayVer.push(line);
             if (i == 0) {
@@ -55,15 +55,37 @@ class Grid {
                 this.specialObjects.add(line);
                 continue;
             }
+
+            if (axisMarkGap == 5) {
+                let axisMark = svgPanel.text(i.toString()).x(i).y(10).font({
+                    family: 'Roboto',
+                    size: 10,
+                }).id("axisMark" + i.toString());
+                let axisCircle = svgPanel.circle(5).x(i - 2.5).y(0).id("axisCircle" + i.toString());
+                this.verLineGroup.add(axisMark);
+                this.verLineGroup.add(axisCircle);
+                axisMarkGap = 0;
+            }
             this.verLineGroup.add(line);
         }
-        for (let i = 0; i <= height; i += gap) {
+        for (let i = 0, axisMarkGap = 0; i <= width; i += gap, axisMarkGap++) {
             let line = svgPanel.line(0, i, width, i).stroke({width: 1});
             this.gridLineArrayHor.push(line);
             if (i == 0) {
                 line.stroke({width: 3});
                 this.specialObjects.add(line);
                 continue;
+            }
+
+            if (axisMarkGap == 5) {
+                let axisMark = svgPanel.text(i.toString()).x(10).y(i).font({
+                    family: 'Roboto',
+                    size: 10,
+                }).id("axisMark" + i.toString());
+                let axisCircle = svgPanel.circle(5).x(0).y(i - 2.5).id("axisCircle" + i.toString());
+                this.horLineGroup.add(axisMark);
+                this.horLineGroup.add(axisCircle);     
+                axisMarkGap = 0;       
             }
             this.horLineGroup.add(line);
         }
